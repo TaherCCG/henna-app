@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load checkout_filters %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
+{% endblock %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block page_header %}
+<div class="container header-container">
+    <div class="row">
+        <div class="col"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="overlay"></div>
+<div class="container mt-5 mb-5">
+    <div class="row g-5">
+
+        <!-- Order Summary Section -->
+        <div class="col-lg-5">
+            <div class="order-summary p-4 rounded shadow-sm bg-light">
+                <h2 class="mb-4 text-center">Order Summary ({{ cart_items|length }})</h2>
+                <div class="p-3 bg-white rounded border">
+                    <table class="table table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Image</th>
+                                <th scope="col">Product</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'product_detail' item.product.id %}">
+                                        {% if item.product.image %}
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"
+                                            class="img-fluid rounded" style="width: 100px;">
+                                        {% else %}
+                                        <img src="{% static 'media/no-image.png' %}" alt="No Image Available"
+                                            class="img-fluid rounded" style="width: 100px;">
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                <td>{{ item.product.name }}</td>
+                                <td>£{{ item.discounted_price|floatformat:2 }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>£{{ item.discounted_price|floatformat:2|multiply:item.quantity|floatformat:2 }}</td>
+                            </tr>
+                            {% endfor %}
+
+                            <tr class="fw-bold">
+                                <td colspan="4" class="text-end">Subtotal</td>
+                                <td>£{{ total_cost|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="text-end">VAT</td>
+                                <td>£{{ vat_amount|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="text-end">Delivery Cost</td>
+                                <td id="order-summary-delivery-cost">£{{ delivery_cost|floatformat:2 }}</td>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td colspan="5" class="text-end">Grand Total (incl. VAT)</td>
+                                <td id="grand-total">£{{ grand_total_with_vat|floatformat:2 }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    {% if delivery_name == 'Free Delivery' %}
+                    <div class="alert alert-info mt-3 text-center">
+                        Free delivery Available!
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning mt-3 text-center">
+                        Spend <strong>£{{ free_delivery_delta }}</strong> more for free delivery!
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout Form Section -->
+        <div class="col-lg-7">
+            <div class="checkout-form p-4 rounded shadow-sm bg-light">
+                <h1 class="text-center mb-4">Checkout Form</h1>
+                <form method="post" action="{% url 'checkout' %}" id="payment-form">
+                    {% csrf_token %}
+
+                    <!-- Contact Details Fieldset -->
+                    <fieldset class="mb-4 border p-3 rounded">
+                        <legend class="text-primary">Contact Details</legend>
+                        {{ order_form.full_name|as_crispy_field }}
+                        {{ order_form.email|as_crispy_field }}
+                        {{ order_form.phone_number|as_crispy_field }}
+                    </fieldset>
+
+                    <!-- Shipping Information Fieldset -->
+                    <fieldset class="mb-4 border p-3 rounded">
+                        <legend class="text-primary">Shipping Information</legend>
+                        {{ order_form.street_address1|as_crispy_field }}
+                        {{ order_form.street_address2|as_crispy_field }}
+                        {{ order_form.town_or_city|as_crispy_field }}
+                        {{ order_form.postcode|as_crispy_field }}
+                        {{ order_form.country|as_crispy_field }}
+
+                        <div class="form-check form-check-inline float-end me-0">
+                            {% if user.is_authenticated %}
+                            <input class="form-check-input ms-2 me-0" type="checkbox" id="id-save-info" name="save-info"
+                                checked>
+                            <label class="form-check-label" for="id-save-info">
+                                Save this delivery information to my profile
+                            </label>
+                            {% else %}
+                            <label class="form-check-label" for="id-save-info">
+                                <a class="text-info" href="{% url 'account_signup' %}">Create an account</a> or
+                                <a class="text-info" href="{% url 'account_login' %}">login</a> to save this information
+                            </label>
+                            {% endif %}
+                        </div>
+                    </fieldset>
+
+                    <!-- Delivery Method Fieldset -->
+                    <fieldset class="mb-4 border p-3 rounded">
+                        <legend class="text-primary">Delivery Method</legend>
+                        <div class="mb-3">
+                            <p class="text-muted">You can change the delivery type below:</p>
+                            <select id="id_delivery_method" name="delivery_method" class="stripe-style-input">
+                                {% if is_threshold_met %}
+                                    {% for delivery in delivery_methods %}
+                                        <option value="{{ delivery.id }}" {% if delivery.name == delivery_name %}selected{% endif %}>
+                                            {{ delivery.name }}
+                                        </option>
+                                    {% endfor %}
+                                {% else %}
+                                    {% for delivery in delivery_methods %}
+                                        {% if delivery.name != "Free Delivery" %}
+                                            <option value="{{ delivery.id }}" {% if delivery.name == delivery_name %}selected{% endif %}>
+                                                {{ delivery.name }}
+                                            </option>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>                                                
+                        <div id="delivery-info">
+                            <p id="company-name">Company: {{ delivery_name }}</p>
+                            <p id="estimated-delivery-time">Estimated Delivery Time: {{ estimated_delivery_time }}</p>
+                            <p id="delivery-cost">£{{ delivery_cost|floatformat:2 }}</p>
+                        </div>
+                    </fieldset>
+
+                    <!-- Payment Information Fieldset -->
+                    <fieldset class="mb-4 border p-3 rounded">
+                        <legend class="text-primary">Payment Information</legend>
+                        <div class="mb-3" id="card-element"></div>
+                        <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
+                        <input type="hidden" value="{{ client_secret }}" name="client_secret">
+                    </fieldset>
+
+                    <!-- Submit Button -->
+                    <div class="submit-button text-end mt-5 mb-2">
+                        <a href="{% url 'view_cart' %}"
+                            class="btn btn-outline-black rounded-0 d-inline-flex align-items-center">
+                            <span class="icon">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="fw-bold ms-2">Adjust Cart</span>
+                        </a>
+                        <button id="submit-button"
+                            class="btn btn-black rounded-0 d-inline-flex align-items-center ms-3">
+                            <span class="fw-bold">Complete Order</span>
+                            <span class="icon ms-2">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                        </button>
+                        <p class="small text-danger my-0 mt-3 d-flex align-items-center">
+                            <span class="icon me-1">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </span>
+                            <span>Your card will be charged: 
+                                <strong id="grand-total-to-pay">£{{ grand_total_with_vat|floatformat:2 }}</strong>
+                            </span>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="loading-overlay">
+    <h1 class="text-light logo-font loading-spinner">
+        <span class="icon">
+            <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+        </span>
+    </h1>
+</div>
+{% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+{{ stripe_public_key|json_script:"id_stripe_public_key" }}
+{{ client_secret|json_script:"id_client_secret" }}
+<script src="{% static 'checkout/js/checkout.js' %}"></script>
+{% endblock %}

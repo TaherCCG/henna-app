@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_header %}
+<div class="container header-container">
+    <div class="row">
+        <div class="col">
+            <h2>Delivery Methods</h2>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="overlay"></div>
+<div class="container">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Company Name</th>
+                <th>Cost</th>
+                <th>Estimated Delivery Time</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for delivery in deliveries %}
+            <tr>
+                <td>{{ delivery.name }}</td>
+                <td>{{ delivery.company_name }}</td>
+                <td>£{{ delivery.cost|floatformat:2 }}</td>
+                <td>{{ delivery.estimated_delivery_time }}</td>
+                <td>
+                    <a href="{% url 'edit_delivery' delivery.id %}" class="btn btn-warning" aria-label="Edit delivery method {{ delivery.name }}">Edit</a>
+                    {% if delivery.name == "Free Delivery" or delivery.name == "Standard Delivery" %}
+                        <span class="text-muted">Cannot delete default delivery methods.</span>
+                    {% else %}
+                        <button 
+                            class="btn btn-danger" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#deleteModal"
+                            data-delivery-id="{{ delivery.id }}"
+                            data-delivery-name="{{ delivery.name }}">
+                            Delete
+                        </button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No delivery methods found. Click 'Add Delivery Method' to create one.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'add_delivery' %}" class="btn btn-primary">Add Delivery Method</a>
+</div>
+
+<!-- Modal for confirming deletion -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <strong id="deliveryName"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'checkout/js/list_deliveries.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_header %}
+<div class="container header-container">
+    <div class="row">
+        <div class="col">
+            <h2>{{ title }}</h2>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="overlay"></div>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Dynamic Title -->
+            <h1 class="page-header-title text-center">{{ title }}</h1>
+
+            <!-- Delivery Form -->
+            <form method="post" action="{% if edit_mode %}{% url 'edit_delivery' delivery.id %}{% else %}{% url 'add_delivery' %}{% endif %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <div class="d-flex justify-content-between mt-3">
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary w-100">
+                        {% if edit_mode %} Update Delivery {% else %} Save Delivery {% endif %}
+                    </button>
+
+                    <!-- Cancel Button -->
+                    <a href="{% url 'list_deliveries' %}" class="btn btn-secondary w-100 ms-2">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'products/css/form_styles.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'products/js/form_scripts.js' %}"></script>
+{% endblock %}

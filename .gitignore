@@ -1,0 +1,34 @@
+# Ignore Microsoft-specific files 
+core.Microsoft*
+
+# Ignore MongoDB-related files
+core.mongo*
+
+# Ignore Python-related core files
+core.python*
+
+# Ignore environment variable files for security
+env.py
+
+# Ignore the virtual environment folder (.venv)
+venv/
+
+# Ignore Python bytecode files (compiled .pyc files)
+__pycache__/
+*.py[cod]
+
+# Ignore node_modules directory (for JavaScript dependencies)
+node_modules/
+
+# Ignore GitHub-specific files (e.g., GitHub Actions workflows)
+.github/
+
+# Ignore Cloudinary configuration or temporary files
+cloudinary_python.txt
+
+# Ignore SQLite3 database files
+*.sqlite3
+
+# Ignore Python compiled files (.pyc)
+*.pyc
+

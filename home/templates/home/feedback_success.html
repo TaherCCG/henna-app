@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% load static %} 
+
+{% block title %}Thank You!{% endblock %}
+
+{% block page_header %}
+    <div class="container header-container">
+        <div class="row">
+            <div class="col">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="overlay"></div>
+<div class="container text-center section-background">
+    <h2 class="display-4">Thank you, {{ feedback_sender_name }}!</h2>
+    <p class="lead">We really appreciate you taking the time to share your thoughts with us. 
+            Your feedback means a lot, and We will reach out to you via {{ feedback_contact_method }}.</p>
+  
+    <a href="{% url 'home' %}" class="cta-button">Back to Home</a>
+</div>
+{% endblock %}

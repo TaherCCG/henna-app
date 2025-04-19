@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Henna Store Landing Page{% endblock %}
+
+{% block page_header %}
+    <div class="container header-container">
+        <div class="row">
+            <div class="col"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-lg-4 offset-lg-8 my-auto text-center hero-container">
+                <h1 class="logo-font my-3">
+                    <strong>Henna </strong>Store
+                </h1>
+                <p class="decorative"><em>Find Your Perfect Design.</em></p>
+                <hr class="hr-bar-small">
+                <div class="my-3">
+                    <a href="{% url 'products' %}" class="btn shop-now-button btn-lg rounded-5 py-1 decorative" aria-label="Shop Now Button to View All Products">Shop Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Banner -->
+    {% if user.is_authenticated %}
+        <section class="cta-banner">
+            <div class="container text-center py-2">
+                <h2 class="cta-heading decorative" aria-label="Thank You Message for Returning Users">Thank You for Being with Us!</h2>
+                <p class="text-dark fw-bold">We appreciate your support! Enjoy browsing our products.</p>
+            </div>
+        </section>
+    {% else %}
+        <section class="cta-banner">
+            <div class="container text-center py-2">
+                <h2 class="cta-heading decorative" aria-label="Promotion Message for New Users">Get 10% Off Your First Order!</h2>
+                <p class="text-dark fw-bold">Sign up today and enjoy exclusive discounts!</p>
+                <a href="{% url 'account_signup' %}" class="btn cta-button btn-lg rounded-5 mt-2" aria-label="Sign Up Now Button to Register Account">Sign Up Now</a>
+            </div>
+        </section>
+    {% endif %}
+
+    <!-- Featured Products Section -->
+    <section class="section-background">
+        <div class="container my-5">
+            <h2 class="text-center logo-font text-black" aria-label="Featured Products Section">Featured Products</h2>
+            <div class="row row-cols-1 row-cols-md-3 g-4 mt-1 mb-2">
+                {% for product in products %}
+                    <div class="col">
+                        <a href="{% url 'product_detail' product.id %}" class="text-decoration-none" aria-label="View Details for {{ product.name }}">
+                            <div class="card h-100 product-card border-0 shadow-sm">
+                                {% if product.image %}
+                                    <img class="card-img-top img-fluid product-img" src="{{ product.image.url }}" alt="{{ product.name }}" aria-label="Image of {{ product.name }}">
+                                {% elif product.image_url %}
+                                    <img class="card-img-top img-fluid product-img" src="{{ product.image_url }}" alt="{{ product.name }}" aria-label="Image of {{ product.name }}">
+                                {% else %}
+                                    <img class="card-img-top img-fluid product-img" src="{% static 'noimage.png' %}" alt="{{ product.name }}" aria-label="Placeholder Image for {{ product.name }}">
+                                {% endif %}
+                                <div class="card-body product-info pb-0">
+                                    <h5 class="product-title mb-2" aria-label="Product Name: {{ product.name }}">{{ product.name }}</h5>
+                                    <p class="text-muted" aria-label="Product Description">{{ product.description|truncatewords:10 }}</p>
+                                </div>
+                                <div class="card-footer bg-white pt-0 border-0 text-start">
+                                    <p class="lead mb-0 fw-bold" aria-label="Price: £{{ product.price }}">£{{ product.price }}</p>
+                                    {% if product.category %}
+                                        <p class="small mt-1 mb-0" aria-label="Product Category: {{ product.category.get_friendly_name }}">
+                                            <i class="fas fa-tag me-1"></i>{{ product.category.get_friendly_name }}
+                                        </p>
+                                    {% endif %}
+                                    {% if product.rating %}
+                                        <small class="text-muted" aria-label="Product Rating: {{ product.rating }} out of 5">
+                                            <i class="fas fa-star"></i> {{ product.rating }} / 5
+                                        </small>
+                                    {% else %}
+                                        <small class="text-muted" aria-label="No Rating Available for this Product">No Rating</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

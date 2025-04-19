@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="overlay"></div>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Dynamic Title -->
+            <h1 class="page-header-title">{{ title }}</h1>
+
+            <!-- Discount Form -->
+            <form method="post" action="{% if edit_mode %}{% url 'edit_discount' discount.id %}{% else %}{% url 'add_discount' %}{% endif %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn shop-now-button w-100 mt-3">
+                    {% if edit_mode %} Update Discount {% else %} Save Discount {% endif %}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'products/css/form_styles.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'products/js/form_scripts.js' %}"></script>
+{% endblock %}
+
+<!-- Dynamic Title in views: https://iheanyi.com/journal/2020/04/04/dynamic-page-titles-in-django/ -->

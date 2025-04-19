@@ -1,0 +1,70 @@
+<div class="collapse navbar-collapse" id="main-nav">
+    <ul class="navbar-nav w-auto mx-auto">
+        <!-- All Products and Services Dropdown -->
+        <li class="nav-item dropdown">
+            <a class="logo-font fw-bold nav-link text-dark me-5" href="#" id="all-products-link" data-bs-toggle="dropdown" aria-expanded="false">
+                All Henna Products
+            </a>
+            <ul class="dropdown-menu border-0" aria-labelledby="all-products-link">
+                <a href="{% url 'products' %}?sort=price&direction=asc" class="dropdown-item">By Price</a>
+                <a href="{% url 'products' %}?sort=rating&direction=desc" class="dropdown-item ">By Rating</a>
+                <a href="{% url 'products' %}?sort=category&direction=asc" class="dropdown-item ">By Category</a>
+                <a href="{% url 'products' %}" class="dropdown-item">All Products</a>
+            </ul>
+        </li>
+
+        <!-- Henna Products Dropdown -->
+        <li class="nav-item dropdown">
+            <a class="logo-font fw-bold nav-link text-dark me-5" href="#" id="clothing-link" data-bs-toggle="dropdown" aria-expanded="false">
+                Henna
+            </a>
+            <ul class="dropdown-menu border-0" aria-labelledby="henna-link">
+                <li><a href="{% url 'products' %}?category=henna_cones" class="dropdown-item">Henna Cones</a></li>
+                <li><a href="{% url 'products' %}?category=henna_tubes" class="dropdown-item">Henna Tubes </a></li>
+                <li><a href="{% url 'products' %}?category=henna_paste" class="dropdown-item">Henna Paste</a></li>
+                <li><a href="{% url 'products' %}?category=henna_powder" class="dropdown-item">Henna Powder</a></li>
+                <li><a href="{% url 'products' %}?category=henna_cones,henna_tubes,henna_paste,henna_powder" class="dropdown-item">All Henna Products</a></li>
+            </ul>
+        </li>
+
+        <!-- henna Kits -->
+        <li class="nav-item dropdown">
+            <a class="logo-font fw-bold nav-link text-dark me-5" href="#" id="homeware-link" data-bs-toggle="dropdown" aria-expanded="false">
+                Henna Kits
+            </a>
+            <ul class="dropdown-menu border-0" aria-labelledby="service-link">
+                <li><a href="{% url 'products' %}?category=starter_kits" class="dropdown-item">Starter Kit</a></li>
+                <li><a href="{% url 'products' %}?category=professional_kits" class="dropdown-item">Professional Kits</a></li>
+                <li><a href="{% url 'products' %}?category=diy_kits" class="dropdown-item">DIY Kits</a></li>
+                <li><a href="{% url 'products' %}?category=starter_kits,diy_kits,professional_kits" class="dropdown-item">All Kits</a></li>
+            </ul>
+        </li>
+
+        <!-- henna Kits -->
+        <li class="nav-item dropdown">
+            <a class="logo-font fw-bold nav-link text-dark me-5" href="#" id="homeware-link" data-bs-toggle="dropdown" aria-expanded="false">
+                Henna Accessories
+            </a>
+            <ul class="dropdown-menu border-0" aria-labelledby="service-link">
+                <li><a href="{% url 'products' %}?category=henna_applicator_bottles" class="dropdown-item">Henna Applicator Bottles</a></li>
+                <li><a href="{% url 'products' %}?category=stencils" class="dropdown-item">Stencils</a></li>
+                <li><a href="{% url 'products' %}?category=henna_mixing_bowls" class="dropdown-item">Henna Mixing Bowls</a></li>
+                <li><a href="{% url 'products' %}?category=squeeze_bottles" class="dropdown-item">Squeeze Bottles</a></li>
+                <li><a href="{% url 'products' %}?category=henna_applicator_bottles,stencils,henna_mixing_bowls,squeeze_bottles" class="dropdown-item">All Accessories</a></li>
+            </ul>
+        </li>
+         <!-- henna Kits -->
+         <li class="nav-item dropdown">
+            <a class="logo-font fw-bold nav-link text-dark me-5" href="#" id="homeware-link" data-bs-toggle="dropdown" aria-expanded="false">
+                Henna Stencils and Designs
+            </a>
+            <ul class="dropdown-menu border-0" aria-labelledby="service-link">
+                <li><a href="{% url 'products' %}?category=festival_and_body_art_stencils" class="dropdown-item">Festival and Body Art Stencils</a></li>
+                <li><a href="{% url 'products' %}?category=mandala_and_floral_designs" class="dropdown-item">Mandala and Floral Designs</a></li>
+                <li><a href="{% url 'products' %}?category=bridal_henna_patterns" class="dropdown-item">Bridal Henna Patterns</a></li>
+                <li><a href="{% url 'products' %}?category=hand_and_foot_stencils" class="dropdown-item">Hand and Foot Stencils</a></li>
+                <li><a href="{% url 'products' %}?category=festival_and_body_art_stencils,mandala_and_floral_designs,bridal_henna_patterns,hand_and_foot_stencils" class="dropdown-item">All Stencils and Designs</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>

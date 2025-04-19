@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css%}
+<link rel="stylesheet" href="{% static 'home/contact_form.css' %}">
+{% endblock %}
+
+{% block title %}Contact us Page{% endblock %}
+
+{% block page_header %}
+    <div class="container header-container">
+        <div class="row">
+            <div class="col"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="overlay"></div>
+<div class="container my-5">
+    <h1 class="display-4 text-center">Contact Us</h1>
+    <p class="lead text-center">We would love to hear from you! Please fill out the form below.</p>
+
+    <div class="contact-form-container mx-auto mt-4 col-lg-6 col-md-8">
+        <form method="post" class="contact-form">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.name.label_tag }}
+                <input type="text" name="name" class="form-control" required>
+                {{ form.name.errors }}
+            </div>
+            <div class="mb-3">
+                {{ form.email.label_tag }}
+                <input type="email" name="email" class="form-control" required>
+                {{ form.email.errors }}
+            </div>
+            <div class="mb-3">
+                {{ form.phone.label_tag }}
+                <input type="text" name="phone" class="form-control">
+                {{ form.phone.errors }}
+            </div>
+            <div class="mb-3">
+                {{ form.subject.label_tag }}
+                <input type="text" name="subject" class="form-control" required>
+                {{ form.subject.errors }}
+            </div>
+            <div class="mb-3">
+                {{ form.message.label_tag }}
+                <textarea name="message" class="form-control" required></textarea>
+                {{ form.message.errors }}
+            </div>
+            <div class="mb-3">
+                {{ form.contact_method.label_tag }}
+                <select name="contact_method" class="form-select">
+                    <option value="email">Email</option>
+                    <option value="phone">Phone</option>
+                </select>
+                {{ form.contact_method.errors }}
+            </div>
+            <div class="mb-3">
+                {{ form.reason.label_tag }}
+                <select name="reason" class="form-select">
+                    <option value="support">Support</option>
+                    <option value="feedback">Feedback</option>
+                    <option value="inquiry">General Inquiry</option>
+                </select>
+                {{ form.reason.errors }}
+            </div>
+            <div class="form-check mb-3">
+                <input type="checkbox" name="consent" class="form-check-input" required>
+                <label class="form-check-label">{{ form.consent.label }}</label>
+                {{ form.consent.errors }}
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

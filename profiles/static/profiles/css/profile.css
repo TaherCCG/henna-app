@@ -1,0 +1,47 @@
+#profile-update-form .form-control {
+    color: var(--color-support-charcoal);
+    border-color: var(--color-support-olive);
+}
+
+#profile-update-form input::placeholder {
+    color: var(--color-support-charcoal);
+}
+
+#id_default_country,
+#id_default_country option:not(:first-child) {
+    color: var(--color-primary);
+}
+
+#id_default_country option:first-child {
+    color: var(--color-support-charcoal);
+}
+
+/* Button Styling */
+#profile-update-form button {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-family: var(--font-general);
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#profile-update-form button:hover {
+    background-color: var(--color-accent);
+    color: var(--color-support-charcoal);
+}
+
+/* Form field styling */
+#profile-update-form input,
+#profile-update-form select {
+    background-color: var(--color-background);
+    border: 1px solid var(--color-support-olive);
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+
+#profile-update-form label {
+    color: var(--color-primary);
+    font-family: var(--font-body);
+}
